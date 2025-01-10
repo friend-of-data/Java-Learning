@@ -1,0 +1,65 @@
+package com.montecarlo;
+
+import java.util.Random;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Parameters
+        double initialRate = 0.05;   // Starting interest rate (5%)
+        double meanReversion = 0.02; // Mean reversion level (2%)
+        double volatility = 0.01;    // Volatility (1%)
+        double timeHorizon = 1.0;    // Time horizon in years
+        int numSteps = 1000;          // Number of time steps
+        int numSimulations = 10000;  // Number of Monte Carlo simulations
+
+        // Run the simulation
+        double[][] simulatedPaths = monteCarloSimulation(
+            initialRate, meanReversion, volatility, timeHorizon, numSteps, numSimulations
+        );
+
+        // Example: Calculate the average interest rate at the final time step
+        double averageRate = 0.0;
+        for (int i = 0; i < numSimulations; i++) {
+            averageRate += simulatedPaths[i][numSteps - 1];
+        }
+        averageRate /= numSimulations;
+
+        System.out.printf("Average Interest Rate at T=%.2f: %.4f%%\n", timeHorizon, averageRate * 100);
+    }
+
+    /**
+     * Monte Carlo simulation for interest rates using GBM
+     *
+     * @param initialRate    Initial interest rate
+     * @param meanReversion  Mean reversion level (drift)
+     * @param volatility     Volatility of the rate
+     * @param timeHorizon    Time horizon in years
+     * @param numSteps       Number of time steps
+     * @param numSimulations Number of simulations
+     * @return Simulated interest rate paths
+     */
+    public static double[][] monteCarloSimulation(double initialRate, double meanReversion, double volatility,
+                                                  double timeHorizon, int numSteps, int numSimulations) {
+        double dt = timeHorizon / numSteps; // Time step size
+        double[][] paths = new double[numSimulations][numSteps];
+        Random random = new Random();
+
+        // Loop over each simulation
+        for (int i = 0; i < numSimulations; i++) {
+            paths[i][0] = initialRate; // Start at the initial rate
+
+            // Generate the path
+            for (int j = 1; j < numSteps; j++) {
+                double prevRate = paths[i][j - 1];
+                double dW = random.nextGaussian() * Math.sqrt(dt); // Brownian increment
+                // GBM equation for interest rate: dr = μ(r)dt + σr dW
+                double drift = meanReversion * (meanReversion - prevRate) * dt;
+                double diffusion = volatility * prevRate * dW;
+                paths[i][j] = prevRate + drift + diffusion;
+            }
+        }
+
+        return paths;
+    }
+}
