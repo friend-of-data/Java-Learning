@@ -6,8 +6,12 @@ public class Main {
 
     public static void main(String[] args) {
         // Parameters
-        double initialRate = 0.05;   // Starting interest rate (5%)
-        double meanReversion = 0.02; // Mean reversion level (2%)
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Please give initial interes rate (e.g, 0.05 for 5%): ");
+        double initialRate = scanner.nextDouble();
+        System.out.print("Please give mean reversion (e.g, 0.02 for 2%): ");
+        double meanReversion = scanner.nextDouble();
+        scanner.close();
         double volatility = 0.01;    // Volatility (1%)
         double timeHorizon = 1.0;    // Time horizon in years
         int numSteps = 1000;          // Number of time steps
