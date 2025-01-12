@@ -7,3 +7,6 @@ There is certain naming convention in Java. Packages are normally named in lower
 VisualStudio can be used to edit Java code. After running/ compiling, the package will be a higher hierarchy, under which there will be .Java and .Class file.
 ## 2. Public modifier
 In java, public is a access modifier that defines the accessibility of something (class, methods, variables).
+
+## 3. Define variable
+Every variable must have its data type declared at creation.
